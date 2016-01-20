@@ -10,9 +10,10 @@ class NodeTests(unittest.TestCase):
 
 class UnorderedListTests(unittest.TestCase):
 
-    def test_count(self):
+    def test_size(self):
         ul = UnorderedList()
         ul.add(5)
+        self.assertLess(ul.size(), 2)
         ul.add(8)
         self.assertEqual(ul.size(), 2)
 
@@ -27,6 +28,7 @@ class UnorderedListTests(unittest.TestCase):
         ul.add(5)
         ul.add(4)
         ul.add(6)
+        self.assertFalse(ul.search(7))
         ul.add(7)
         ul.add(8)
         self.assertTrue(ul.search(7))
@@ -71,3 +73,4 @@ class UnorderedListTests(unittest.TestCase):
         self.assertTrue(ul.append(5))
         self.assertEqual(ul.size(), 1)
         self.assertTrue(ul.append("a"))
+        self.assertEqual(ul.size(), 2)
