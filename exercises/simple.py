@@ -10,32 +10,33 @@ class Stack():
     def __init__(self):
         """Initierar en tom stack.
         """
-        pass
+        self.content = []
 
     def push(self, item):
         """Lägg till `item` överst på stacken.
         """
-        pass
+        self.content.insert(0, item)
+        return True
 
     def pop(self):
         """Plockar bort och returnerar översta värdet på stacken.
         """
-        pass
+        return self.content.pop(0)
 
     def peek(self):
         """Returnerar översta värdet på stacken.
         """
-        pass
+        return self.content[0]
 
     def is_empty(self):
         """Returnerar `True` om stacken är tom, annars `False`.
         """
-        pass
+        return len(self.content) == 0
 
     def size(self):
         """Returnerar antalet värden på stacken.
         """
-        pass
+        return len(self.content)
 
 
 class Queue():

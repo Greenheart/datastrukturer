@@ -2,6 +2,9 @@
 
 from .exceptions import EmptyList
 
+# TODO: maybe raise EmptyList if list is empty when methods try to access?
+#       Or keep normal error handling code?
+
 
 class Node():
     """Implementation av nod för `UnorderedList`.
