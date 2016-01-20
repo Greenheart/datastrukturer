@@ -46,24 +46,25 @@ class Queue():
     def __init__(self):
         """Initierar en tom kö.
         """
-        pass
+        self.content = []
 
     def enqueue(self, item):
         """Lägger till `ìtem` i slutuet på kön.
         """
-        pass
+        self.content.append(item)
+        return True
 
     def dequeue(self):
         """Plockar bort det första värdet i kön och returnerar det.
         """
-        pass
+        return self.content.pop(0)
 
     def is_empty(self):
         """Returnerar `True` om kön är tom, annars `False`.
         """
-        pass
+        return len(self.content) == 0
 
     def size(self):
         """Returnerar antalet värden i kön.
         """
-        pass
+        return len(self.content)
