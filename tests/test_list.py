@@ -53,20 +53,37 @@ class UnorderedListTests(unittest.TestCase):
 
     def test_insert(self):
         ul = UnorderedList()
+        self.assertTrue(ul.insert(0, 4))
         ul.add(5)
         ul.add(3)
-        self.assertTrue(ul.insert(0, 5))
+        self.assertTrue(ul.insert(2, 5))
+        self.assertTrue(ul.insert(0, 8))
         self.assertTrue(ul.search(5))
+        self.assertFalse(ul.insert(8, 100))
 
     def test_pop(self):
         ul = UnorderedList()
-        self.assertFalse(ul.pop(2))
+        self.assertFalse(ul.pop())  # It's not possible to pop from empty lists
+        ul.add(1)
+        self.assertFalse(ul.pop(-1))  # Index out of range
+        self.assertListEqual(ul._vals(), [1])
+
+        ul.add(2)
+        ul.add(3)
+        ul.add(4)
         ul.add(5)
-        self.assertTrue(ul.pop(0))
-        ul.add(5)
-        self.assertFalse(ul.pop(2))
+        self.assertListEqual(ul._vals(), [5, 4, 3, 2, 1])
+        self.assertTrue(ul.pop(4))  # Pop last item using index --> 1
+        self.assertListEqual(ul._vals(), [5, 4, 3, 2])
+        self.assertTrue(ul.pop(0))  # Pop first --> 5
+        self.assertListEqual(ul._vals(), [4, 3, 2])
         self.assertTrue(ul.pop())
+        self.assertTrue(ul.pop(0))
+        self.assertListEqual(ul._vals(), [3])
+        self.assertTrue(ul.pop())   # Pop last item without index
         self.assertEqual(ul.size(), 0)
+        ul.add(1)
+        self.assertTrue(ul.pop(0))  # Pop last item using index
 
     def test_append(self):
         ul = UnorderedList()
@@ -74,3 +91,6 @@ class UnorderedListTests(unittest.TestCase):
         self.assertEqual(ul.size(), 1)
         self.assertTrue(ul.append("a"))
         self.assertEqual(ul.size(), 2)
+        self.assertTrue(ul.append('b'))
+        self.assertTrue(ul.append('c'))
+        self.assertTrue(ul.append('d'))
