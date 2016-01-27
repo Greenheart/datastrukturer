@@ -2,9 +2,6 @@
 
 from .exceptions import EmptyList
 
-# TODO: maybe raise EmptyList if list is empty when methods try to access?
-#       Or keep normal error handling code?
-
 
 class Node():
     """Implementation av nod för `UnorderedList`.
@@ -28,15 +25,18 @@ class UnorderedList():
         """
         self.head = None
 
+
     def is_empty(self):
         """Returnerar `True` om listan är tom, annars `False`.
         """
         return self.head is None
 
+
     def add(self, item):
         """Lägg till `item` i början av listan.
         """
         self.head = Node(item, self.head)
+
 
     def size(self):
         """Returnerar antalet värden i listan.
@@ -47,6 +47,7 @@ class UnorderedList():
             count += 1
             current = current.next
         return count
+
 
     def search(self, item):
         """Returnerar `True` om `item` finns i listan, annars `False`.
@@ -59,15 +60,22 @@ class UnorderedList():
 
         return False
 
+
     def remove(self, item):
         """Raderar första förekomsten av `item` från listan.
         """
+        if self.is_empty():
+            raise EmptyList
+
         current = self.head
         prev = None
         while current:
             if current.data == item:
                 if prev:    # If we have a node before the current item
-                    prev.next = current.next
+                    if current.next:
+                        prev.next = current.next
+                    else:
+                        prev.next = None
                 else:
                     self.head = current.next
                 return True
@@ -75,7 +83,8 @@ class UnorderedList():
             prev = current
             current = current.next
 
-        return False    # Failure
+        return False
+
 
     def append(self, item):
         """Lägg till `item` i slutet av listan.
@@ -93,20 +102,20 @@ class UnorderedList():
 
             current = current.next
 
+
     def insert(self, position, item):
         """Lägg till `item` på index `position`.
         """
         current = self.head
 
-        if not current:  # No previous item, add to the beginning
-            self.head = Node(item, None)
-            return True
+        if position > self.size():
+            raise IndexError
 
         # Only init these vars if actually needed
         index = 0
         prev = None
 
-        while current:
+        while True:
             if index == position:
                 if prev:  # Add between two existing items
                     prev.next = Node(item, current)
@@ -115,67 +124,74 @@ class UnorderedList():
                     self.head = Node(item, current)
                     return True
 
+            if not current: break
+
             index += 1
             prev = current
             current = current.next
 
         return False
 
+
     def index(self, item):
         """Returnerar index i listan för första förekomsten av `item`.
         """
-        if not self.is_empty():
-            index = 0
-            current = self.head
-            while current:
-                if current.data == item:
-                    return index
+        if self.is_empty():
+            raise EmptyList
 
-                current = current.next
-                index += 1
+        index = 0
+        current = self.head
+        while current:
+            if current.data == item:
+                return index
 
-        return None
+            current = current.next
+            index += 1
+
+        raise IndexError
+
 
     def pop(self, position=None):
         """Plockar bort och returnerar värdet på index `position`.
 
         Om inget värde anges för `position` tolkas det som sista värdet.
         """
-        current = self.head
 
-        if not current:  # List empty, nothing to pop
-            return False
+        if self.is_empty():
+            raise EmptyList
+        # Verify that pos is valid if its given
         elif position and (position > self.size() - 1 or position < 0):
-            return False  # Invalid position
+            raise IndexError
+        elif self.size() == 1:
+            data = self.head.data
+            self.head = None
+            return data
 
-        # Only init these vars if actually needed
+        current = self.head
         index = 0
         prev = None
 
         while current:
-            if isinstance(position, int) and position == index:
+            if position == index:
                 if prev:
-                    prev.next = current.next
-                    return True
-                else:  # No previous item, remove from beginning
-                    if self.size() > 1:
-                        self.head = current.next
-                    else:
-                        self.head = None
-
-                    return True
-            else:  # No pos given, just pop last item
-                if not current.next:
-                    if prev:
+                    if current.next:
+                        prev.next = current.next
+                    else:  # If last item is popped using index
                         prev.next = None
-                        return True
-                    else:  # Only one item in list
-                        self.head = None
-                        return True
+                else:  # If the first item is popped using index
+                    self.head = current.next
 
-            index += 1
-            prev = current
-            current = current.next
+                return current.data
+
+            elif current.next:
+                index += 1
+                prev = current
+                current = current.next
+
+            elif not position and not current.next:  # No pos given, pop last item
+                prev.next = None
+                return current.data
+
 
     def _vals(self):
         """Returns a normal list with a copy of all present values
