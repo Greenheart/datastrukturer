@@ -1,5 +1,6 @@
 import unittest
 from exercises.simple import Stack, Queue
+from exercises.exceptions import EmptyStack, EmptyQueue
 
 
 class StackTests(unittest.TestCase):
@@ -24,6 +25,7 @@ class StackTests(unittest.TestCase):
 
     def test_pop(self):
         s = Stack()
+        self.assertRaises(EmptyStack, s.pop)
         s.push(3)
         s.push("a")
         self.assertEqual(s.pop(), "a")
@@ -31,6 +33,7 @@ class StackTests(unittest.TestCase):
 
     def test_peek(self):
         s = Stack()
+        self.assertRaises(EmptyStack, s.peek)
         s.push(3)
         s.push('a')
         self.assertEqual(s.peek(), 'a')
@@ -45,6 +48,7 @@ class QueueTests(unittest.TestCase):
 
     def test_dequeue(self):
         q = Queue()
+        self.assertRaises(EmptyQueue, q.dequeue)
         q.enqueue(3)
         q.enqueue("a")
         self.assertEqual(q.dequeue(), 3)

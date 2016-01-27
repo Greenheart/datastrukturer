@@ -1,6 +1,6 @@
 import unittest
 from exercises.list import Node, UnorderedList
-from exercises.exceptions import *
+from exercises.exceptions import EmptyList
 
 
 class NodeTests(unittest.TestCase):
@@ -18,13 +18,11 @@ class UnorderedListTests(unittest.TestCase):
         ul.add(8)
         self.assertEqual(ul.size(), 2)
 
-
     def test_is_empty(self):
         ul = UnorderedList()
         self.assertTrue(ul.is_empty())
         ul.add(4)
         self.assertFalse(ul.is_empty())
-
 
     def test_search(self):
         ul = UnorderedList()
@@ -36,7 +34,6 @@ class UnorderedListTests(unittest.TestCase):
         ul.add(8)
         self.assertTrue(ul.search(7))
 
-
     def test_remove(self):
         ul = UnorderedList()
         self.assertRaises(EmptyList, ul.remove, 5)
@@ -46,17 +43,23 @@ class UnorderedListTests(unittest.TestCase):
         self.assertTrue(ul.remove(5))
         self.assertEqual(ul.size(), 1)
         self.assertTrue(ul.remove(6))
+        self.assertEqual(ul.size(), 0)
 
+        ul.add(1)
+        ul.add(2)
+        ul.add(3)
+
+        self.assertTrue(ul.remove(2))
 
     def test_index(self):
         ul = UnorderedList()
+        self.assertRaises(EmptyList, ul.index, 2)
         ul.add(5)
         ul.add(4)
         ul.add(5)
         ul.add(6)
         self.assertRaises(IndexError, ul.index, 8)
         self.assertEqual(ul.index(5), 1)
-
 
     def test_insert(self):
         ul = UnorderedList()
@@ -68,10 +71,11 @@ class UnorderedListTests(unittest.TestCase):
         self.assertTrue(ul.search(5))
         self.assertRaises(IndexError, ul.insert, 8, 100)
 
-
     def test_pop(self):
         ul = UnorderedList()
-        self.assertRaises(EmptyList, ul.pop)  # It's not possible to pop from empty lists
+
+        # It's not possible to pop from empty lists
+        self.assertRaises(EmptyList, ul.pop)
         ul.add(1)
         self.assertRaises(IndexError, ul.pop, -1)  # Index out of range
         self.assertRaises(IndexError, ul.pop, 200)  # Index out of range
@@ -97,6 +101,11 @@ class UnorderedListTests(unittest.TestCase):
         ul.add(1)
         self.assertEqual(ul.pop(0), 1)  # Pop last item using index
 
+        ul.add(1)
+        ul.add(2)
+        ul.add(3)
+
+        self.assertEqual(ul.pop(1), 2)
 
     def test_append(self):
         ul = UnorderedList()
@@ -107,3 +116,7 @@ class UnorderedListTests(unittest.TestCase):
         self.assertTrue(ul.append('b'))
         self.assertTrue(ul.append('c'))
         self.assertTrue(ul.append('d'))
+
+    def test_vals(self):
+        ul = UnorderedList()
+        self.assertRaises(EmptyList, ul._vals)

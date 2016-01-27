@@ -25,18 +25,15 @@ class UnorderedList():
         """
         self.head = None
 
-
     def is_empty(self):
         """Returnerar `True` om listan är tom, annars `False`.
         """
         return self.head is None
 
-
     def add(self, item):
         """Lägg till `item` i början av listan.
         """
         self.head = Node(item, self.head)
-
 
     def size(self):
         """Returnerar antalet värden i listan.
@@ -48,7 +45,6 @@ class UnorderedList():
             current = current.next
         return count
 
-
     def search(self, item):
         """Returnerar `True` om `item` finns i listan, annars `False`.
         """
@@ -59,7 +55,6 @@ class UnorderedList():
             current = current.next
 
         return False
-
 
     def remove(self, item):
         """Raderar första förekomsten av `item` från listan.
@@ -85,7 +80,6 @@ class UnorderedList():
 
         return False
 
-
     def append(self, item):
         """Lägg till `item` i slutet av listan.
         """
@@ -95,13 +89,12 @@ class UnorderedList():
             self.head = Node(item, None)
             return True
 
-        while current:
+        while True:
             if not current.next:
                 current.next = Node(item, None)
                 return True
 
             current = current.next
-
 
     def insert(self, position, item):
         """Lägg till `item` på index `position`.
@@ -124,14 +117,9 @@ class UnorderedList():
                     self.head = Node(item, current)
                     return True
 
-            if not current: break
-
             index += 1
             prev = current
             current = current.next
-
-        return False
-
 
     def index(self, item):
         """Returnerar index i listan för första förekomsten av `item`.
@@ -149,7 +137,6 @@ class UnorderedList():
             index += 1
 
         raise IndexError
-
 
     def pop(self, position=None):
         """Plockar bort och returnerar värdet på index `position`.
@@ -171,7 +158,7 @@ class UnorderedList():
         index = 0
         prev = None
 
-        while current:
+        while True:
             if position == index:
                 if prev:
                     if current.next:
@@ -188,20 +175,22 @@ class UnorderedList():
                 prev = current
                 current = current.next
 
-            elif not position and not current.next:  # No pos given, pop last item
+            # No pos given, pop last item
+            elif not position and not current.next:
                 prev.next = None
                 return current.data
-
 
     def _vals(self):
         """Returns a normal list with a copy of all present values
         """
-        if not self.is_empty():
-            current = self.head
-            vals = []
+        if self.is_empty():
+            raise EmptyList
 
-            while current:
-                vals.append(current.data)
-                current = current.next
+        current = self.head
+        vals = []
 
-            return vals
+        while current:
+            vals.append(current.data)
+            current = current.next
+
+        return vals

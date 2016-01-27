@@ -21,11 +21,17 @@ class Stack():
     def pop(self):
         """Plockar bort och returnerar översta värdet på stacken.
         """
+        if self.is_empty():
+            raise EmptyStack
+
         return self.content.pop(0)
 
     def peek(self):
         """Returnerar översta värdet på stacken.
         """
+        if self.is_empty():
+            raise EmptyStack
+
         return self.content[0]
 
     def is_empty(self):
@@ -57,6 +63,9 @@ class Queue():
     def dequeue(self):
         """Plockar bort det första värdet i kön och returnerar det.
         """
+        if self.is_empty():
+            raise EmptyQueue
+
         return self.content.pop(0)
 
     def is_empty(self):
