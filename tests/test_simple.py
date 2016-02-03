@@ -3,6 +3,7 @@ from exercises.simple import Stack, Queue
 from exercises.exceptions import EmptyStack, EmptyQueue
 
 
+
 class StackTests(unittest.TestCase):
 
     def test_push(self):

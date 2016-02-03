@@ -4,12 +4,10 @@ from .exceptions import EmptyList
 
 
 class Node():
-    """Implementation av nod för `UnorderedList`.
-    """
+    """Implementation av nod för `UnorderedList`."""
 
     def __init__(self, data, next):
-        """Initiera noden med attributen `self.data` och `self.next`.
-        """
+        """Initiera noden med attributen `self.data` och `self.next`."""
         self.data = data
         self.next = next
 
@@ -21,23 +19,19 @@ class UnorderedList():
     """
 
     def __init__(self):
-        """Initiera den tomma listan.
-        """
+        """Initiera den tomma listan."""
         self.head = None
 
     def is_empty(self):
-        """Returnerar `True` om listan är tom, annars `False`.
-        """
+        """Returnerar `True` om listan är tom, annars `False`."""
         return self.head is None
 
     def add(self, item):
-        """Lägg till `item` i början av listan.
-        """
+        """Lägg till `item` i början av listan."""
         self.head = Node(item, self.head)
 
     def size(self):
-        """Returnerar antalet värden i listan.
-        """
+        """Returnerar antalet värden i listan."""
         current = self.head
         count = 0
         while current:
@@ -46,8 +40,7 @@ class UnorderedList():
         return count
 
     def search(self, item):
-        """Returnerar `True` om `item` finns i listan, annars `False`.
-        """
+        """Returnerar `True` om `item` finns i listan, annars `False`."""
         current = self.head
         while current:
             if current.data is item:
@@ -57,8 +50,7 @@ class UnorderedList():
         return False
 
     def remove(self, item):
-        """Raderar första förekomsten av `item` från listan.
-        """
+        """Raderar första förekomsten av `item` från listan."""
         if self.is_empty():
             raise EmptyList
 
@@ -81,8 +73,7 @@ class UnorderedList():
         return False
 
     def append(self, item):
-        """Lägg till `item` i slutet av listan.
-        """
+        """Lägg till `item` i slutet av listan."""
         current = self.head
 
         if not current:  # List is empty
@@ -97,8 +88,7 @@ class UnorderedList():
             current = current.next
 
     def insert(self, position, item):
-        """Lägg till `item` på index `position`.
-        """
+        """Lägg till `item` på index `position`."""
         current = self.head
 
         if position > self.size():
@@ -122,8 +112,7 @@ class UnorderedList():
             current = current.next
 
     def index(self, item):
-        """Returnerar index i listan för första förekomsten av `item`.
-        """
+        """Returnerar index i listan för första förekomsten av `item`."""
         if self.is_empty():
             raise EmptyList
 
