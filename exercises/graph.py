@@ -24,7 +24,6 @@ class Vertex():
         """Object representation with `self.key` as identifiera and the first
         five neighbors.
         """
-
         neighbors = sorted(connected_to.keys())
         if len(neighbors) > 5:
             del neighbors[5:]

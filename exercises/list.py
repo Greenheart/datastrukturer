@@ -132,7 +132,6 @@ class UnorderedList():
 
         Om inget värde anges för `position` tolkas det som sista värdet.
         """
-
         if self.is_empty():
             raise EmptyList
         # Verify that pos is valid if its given
@@ -170,8 +169,7 @@ class UnorderedList():
                 return current.data
 
     def _vals(self):
-        """Returns a normal list with a copy of all present values
-        """
+        """Return a normal list with a copy of all present values."""
         if self.is_empty():
             raise EmptyList
 
