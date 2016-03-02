@@ -24,23 +24,22 @@ class BinarySearchTree():
 
     def insert(self, key, value=None):
         """Lägg till en nod i trädet."""
-        node = self
+        if not self.lookup(key):  # Make sure that the key is unique
+            node = self
 
-        while node:
-            if key <= node.key:
-                if node.left:
-                    node = node.left
+            while node:
+                if key < node.key:
+                    if node.left:
+                        node = node.left
+                    else:
+                        node.left = BinarySearchTree(key, value)
+                        return True
                 else:
-                    node.left = BinarySearchTree(key, value)
-                    return True
-            else:
-                if node.right:
-                    node = node.right
-                else:
-                    node.right = BinarySearchTree(key, value)
-                    return True
-
-        return False
+                    if node.right:
+                        node = node.right
+                    else:
+                        node.right = BinarySearchTree(key, value)
+                        return True
 
     def lookup(self, key):
         """Sök efter noden med matchande key.
@@ -50,7 +49,7 @@ class BinarySearchTree():
         if key == self.key:
             return (self.key, self.value)
 
-        if key <= self.key:
+        if key < self.key:
             if self.left:
                 return self.left.lookup(key)
         else:
@@ -59,9 +58,82 @@ class BinarySearchTree():
 
         return None
 
-    def delete(self, key):
+    def delete(self, key, parent=None):
         """Radera noden med matchande key."""
-        pass
+        # Get node with highest value to the left of the node2delete
+        # Or node with lowest value to the right of the node2delete
+        # Use any of these nodes as the new node instead of the node2delete
+
+        if key == self.key:
+            number_of_children = 0
+            if self.left:
+                number_of_children += 1
+            if self.right:
+                number_of_children += 1
+
+            if number_of_children == 0:  # 0 children
+                if parent.left == self:
+                    parent.left = None
+                else:
+                    parent.right = None
+
+            elif number_of_children == 1:  # 1 child
+                if self.left is not None:  # We have a child to the left
+                    new_node = self.left
+                else:                      # We have a child to the right
+                    new_node = self.right
+
+                # Update parent's pointer
+                if parent.left == self:
+                    parent.left = new_node
+                else:
+                    parent.right = new_node
+
+            elif number_of_children == 2:  # 2 children
+                # 1. find node with
+                    # a. highest key to the left of self or
+                    # b. lowest key to the right of self
+                # 2. set pointer of parent.left or parent.right to node
+
+                # follow self.left of self.right to find right replacement-node
+                successor = self.right
+                successor_parent = self
+                while successor.left:
+                    successor_parent = successor
+                    successor = successor.left
+
+                if parent:
+                    # Modify pointers so current will fit in it's new spot
+                    successor.left = self.left
+                    successor.right = self.right
+
+                    # Update parent's pointer
+                    if parent.left == self:
+                        parent.left = successor
+                    else:
+                        parent.right = successor
+
+                else:
+                    self.key = successor.key
+                    self.value = successor.value
+
+                # Delete old position
+                if successor_parent.left == successor:
+                    successor_parent.left = None
+                else:
+                    successor_parent.right = None
+
+            return True  # Hopefully a success
+
+        # If we still need to find the right node to delete
+        if key < self.key:
+            if self.left:
+                return self.left.delete(key, self)
+        else:
+            if self.right:
+                return self.right.delete(key, self)
+
+        return False
 
     def traverse(self):
         """En in-order traversering av trädets noder.
