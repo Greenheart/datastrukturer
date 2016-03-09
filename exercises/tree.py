@@ -140,9 +140,16 @@ class BinarySearchTree():
 
         Implementera som en generator.
         """
-        pass
+        if self.left:
+            for node in self.left.traverse():
+                yield node
+
+        yield self
+
+        if self.right:
+            for node in self.right.traverse():
+                yield node
 
     def __str__(self):
         """Utskrift av trädets alla noder (in-order)."""
-        # Använd traverse...
-        pass
+        return ', '.join([str(x.key) for x in self.traverse()])

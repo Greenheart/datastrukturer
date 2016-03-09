@@ -2,11 +2,22 @@ import unittest
 from exercises.tree import BinarySearchTree
 
 
+def tree_factory(*values):
+    """Create a BST with a given sequence of keys."""
+    bst = BinarySearchTree(values[0])
+
+    for key in values[1:]:  # Skip first value since it's already added
+        bst.insert(key)
+
+    return bst
+
+
 class TreeNodeTests(unittest.TestCase):
     pass
 
 
 class TreeTests(unittest.TestCase):
+
     def test_insert(self):
         bt = BinarySearchTree(5)
         self.assertTrue(bt.insert(2))
@@ -19,15 +30,11 @@ class TreeTests(unittest.TestCase):
         #   / \  /
         #  1  3 7
 
-        bt = BinarySearchTree(5)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(3, "three")
-        bt.insert(8)
-        bt.insert(7)
+        bt = tree_factory(5, 2, 1, 3, 8, 7)
+
         self.assertTupleEqual(bt.lookup(1), (1, None))
         self.assertTupleEqual(bt.lookup(2), (2, None))
-        self.assertTupleEqual(bt.lookup(3), (3, "three"))  # Node with a value
+        self.assertTupleEqual(bt.lookup(3), (3, None))
         self.assertTupleEqual(bt.lookup(5), (5, None))
         self.assertTupleEqual(bt.lookup(7), (7, None))
         self.assertTupleEqual(bt.lookup(8), (8, None))
@@ -75,11 +82,8 @@ class TreeTests(unittest.TestCase):
         #     2
         #    / \
         #   1   3
-        bt = BinarySearchTree(5)
-        bt.insert(4)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(3)
+
+        bt = tree_factory(5, 4, 2, 1, 3)
 
         self.assertTrue(bt.delete(4))
         self.assertIsNone(bt.lookup(4))
@@ -99,12 +103,8 @@ class TreeTests(unittest.TestCase):
         #        1    5
         #            / \
         #           4   6   <-- 4 should replace 2
-        bt = BinarySearchTree(0)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(5)
-        bt.insert(4)
-        bt.insert(6)
+
+        bt = tree_factory(0, 2, 1, 5, 4, 6)
 
         self.assertTrue(bt.delete(2))
         self.assertIsNone(bt.lookup(2))
@@ -124,11 +124,8 @@ class TreeTests(unittest.TestCase):
         #       2   7  <-- This should replace the deleted 5
         #      / \
         #     1   3
-        bt = BinarySearchTree(5)
-        bt.insert(7)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(3)
+
+        bt = tree_factory(5, 7, 2, 1, 3)
         self.assertTrue(bt.delete(5))
         self.assertIsNone(bt.lookup(5))
 
@@ -143,10 +140,8 @@ class TreeTests(unittest.TestCase):
         #       2   <-- This should be deleted
         #      / \
         #     1   3   <-- This should replace the deleted 2
-        bt = BinarySearchTree(5)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(3)
+        bt = tree_factory(5, 2, 1, 3)
+
         self.assertTrue(bt.delete(2))
 
         # Verify that the other nodes are intact
@@ -171,19 +166,8 @@ class TreeTests(unittest.TestCase):
         #           3   9    13     <-- 3 should replace the deleted 2
         #                \
         #                 10
-        bt = BinarySearchTree(20)
-        bt.insert(2)
-        bt.insert(1)
-        bt.insert(-1)
 
-        bt.insert(5)
-        bt.insert(4)
-        bt.insert(3)
-
-        bt.insert(11)
-        bt.insert(9)
-        bt.insert(10)
-        bt.insert(13)
+        bt = tree_factory(20, 2, 1, -1, 5, 4, 3, 11, 9, 10, 13)
 
         self.assertTrue(bt.delete(2))
 
@@ -200,3 +184,37 @@ class TreeTests(unittest.TestCase):
         self.assertEqual(bt.left.right.right.left.key, 9)
         self.assertEqual(bt.left.right.right.left.right.key, 10)
         self.assertEqual(bt.left.right.right.right.key, 13)
+
+    def test_traverse(self):
+        bt = tree_factory(7, 1, 0, 3, 2, 5, 4, 6, 9, 8, 10)
+        in_order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        wrong_keys = [10, 9, 9, 9, 9, 9, 2, 2, 2, 0, 0]
+        """Tree from https://youtu.be/xoU69C4lKlM?t=10m46s."""
+
+        # The result should be like the expected order from 'in_order'
+        for node, expected_key in zip(bt.traverse(), in_order):
+            self.assertEqual(node.key, expected_key)
+
+        # Wrong keys should not be equal to the result of the traversal
+        for node, wrong_key in zip(bt.traverse(), wrong_keys):
+            self.assertNotEqual(node.key, wrong_key)
+
+    def test_traverse_other_tree(self):
+        bt2 = tree_factory(13, 3, 4, 12, 14, 10, 5, 1, 8, 2, 7, 9, 11, 6, 18)
+        in_order2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 18]
+        wrong_keys2 = [8, 7, 5, 2, 8, 8, 1, 2, 10, 8, 9, 9, 9, 9, 9]
+        """Tree from http://lcm.csa.iisc.ernet.in/dsa/node91.html"""
+
+        # The result should be like the expected order from 'in_order'
+        for node, expected_key in zip(bt2.traverse(), in_order2):
+            self.assertEqual(node.key, expected_key)
+
+        # Wrong keys should not be equal to result of the traversal
+        for node, wrong_key in zip(bt2.traverse(), wrong_keys2):
+            self.assertNotEqual(node.key, wrong_key)
+
+    def test_str(self):
+        bt = tree_factory(7, 1, 0, 3, 2, 5, 4, 6, 9, 8, 10)
+        """Tree from https://youtu.be/xoU69C4lKlM?t=10m46s."""
+
+        self.assertEqual(bt.__str__(), '0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10')
